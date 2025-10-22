@@ -1,17 +1,9 @@
-from pathlib import Path
+# Example config for scripts/workflows
+pdf:
+  output_folder: docs
+  filename: sample.pdf
 
-def generate_pdf(output_path="docs/sample.pdf"):
-    Path("docs").mkdir(exist_ok=True)
-    # Placeholder PDF content
-    with open(output_path, "w") as f:
-        f.write("This is a sample PDF placeholder.")
-    print(f"PDF generated at {output_path}")
-
-if __name__ == "__main__":
-    import sys
-    deploy = "--deploy" in sys.argv
-    if deploy:
-        print("Deploy step triggered (placeholder)")
-    else:
-        generate_pdf()
-        
+deploy:
+  target_server: localhost
+  port: 8080
+  
