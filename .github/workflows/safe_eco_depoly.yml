@@ -74,3 +74,13 @@ jobs:
           name: ecosim-pdf
           path: output/report.pdf
           
+# Create main folders
+mkdir -p .github/workflows
+mkdir -p src docs config tests
+
+# Create empty workflow YAML files
+touch .github/workflows/pdf-generation.yml
+touch .github/workflows/deploy.yml
+
+# Optional: create sample script
+echo '# Sample script to test PDF generation' > src/sample_script.py
