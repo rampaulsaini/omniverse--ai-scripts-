@@ -84,3 +84,32 @@ touch .github/workflows/deploy.yml
 
 # Optional: create sample script
 echo '# Sample script to test PDF generation' > src/sample_script.py
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r src/requirements.txt || true
+
+      - name: Deploy script
+        run: |
+          python src/sample_script.py --deploy
+          
