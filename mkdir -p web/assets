@@ -6,3 +6,9 @@ Includes:
 - README donation section appended
 
 This change scaffolds a public page for donors to contribute and for quick deploy to Koyeb (Dockerfile provided).
+mkdir -p web/assets
+curl -L -o web/assets/upi-qr.webp "https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp"
+git checkout -b scaffold/donation
+git add web/index.html web/assets/upi-qr.webp README.md Dockerfile || true
+git commit -m "feat: add donation page (Hindi) + UPI QR + Dockerfile"
+git push -u origin scaffold/donation
