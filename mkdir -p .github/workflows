@@ -1,0 +1,40 @@
+name: Safe EcoSim + PDF Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - feature-eco-sim  # optional, workflow runs on feature branch too
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo safely
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install reportlab Pillow numpy pybullet
+
+      - name: Run EcoSim Prototype + PDF Generation
+        run: |
+          python scripts/EcoSim_Prototype.py --steps 500 --pdf
+
+      - name: Commit updated artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add releases/ scripts/ || echo "No files to commit"
+          git commit -m "Automated EcoSim + PDF update [safe deploy]" || echo "No changes"
+          git push https://x-access-token:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ github.repository }} HEAD:main
