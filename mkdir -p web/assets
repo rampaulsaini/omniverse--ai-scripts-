@@ -12,3 +12,7 @@ git checkout -b scaffold/donation
 git add web/index.html web/assets/upi-qr.webp README.md Dockerfile || true
 git commit -m "feat: add donation page (Hindi) + UPI QR + Dockerfile"
 git push -u origin scaffold/donation
+git checkout -b scaffold/donation
+git add web/index.html web/assets/upi-qr.webp README.md Dockerfile || true
+git commit -m "feat: add donation page (Hindi) + UPI QR + Dockerfile"
+git push -u origin scaffold/donation
