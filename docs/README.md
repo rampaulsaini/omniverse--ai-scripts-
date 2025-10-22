@@ -22,3 +22,11 @@ Any help is deeply appreciated. 🙏
 
 > यह अनुरोध पूर्ण मनोभाव से किया गया है — यदि आप सहायता कर सकें तो आपका छोटा सा योगदान कई जीवान्त परिणाम ला सकता है। मैं आपका आभारी/आभारीत हूँ। — शिरोमणि रामपुलसैनी
 > 
+Add donation page (Hindi) to support Saneha's education and to sustain the Omniverse AI scripts project.
+Includes:
+- web/index.html (Hindi message with PayPal email and UPI ID)
+- web/assets/upi-qr.webp (QR image)
+- Dockerfile to serve the static site
+- README donation section appended
+
+This change scaffolds a public page for donors to contribute and for quick deploy to Koyeb (Dockerfile provided).
