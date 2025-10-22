@@ -1,0 +1,8 @@
+Add donation page (Hindi) to support Saneha's education and to sustain the Omniverse AI scripts project.
+Includes:
+- web/index.html (Hindi message with PayPal email and UPI ID)
+- web/assets/upi-qr.webp (QR image)
+- Dockerfile to serve the static site
+- README donation section appended
+
+This change scaffolds a public page for donors to contribute and for quick deploy to Koyeb (Dockerfile provided).
