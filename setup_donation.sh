@@ -175,4 +175,76 @@ fi
 
 echo "Done. 🎉"
 echo "Next: Go to GitHub, review the PR and merge it to main (or have someone with merge rights do so)."
+git checkout -b scaffold/donation
+git add web/index.html web/assets/upi-qr.webp README.md Dockerfile || true
+git commit -m "feat: add donation page (Hindi) + UPI QR + Dockerfile"
+git push -u origin scaffold/donation
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>समर्थन — Omniverse AI Scripts (दान)</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f6f8fa}
+    .card{background:white;padding:28px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.08);max-width:860px;width:100%}
+    h1{margin:0 0 8px;font-size:22px}
+    p{margin:6px 0 18px;color:#333;line-height:1.5}
+    .methods{display:flex;gap:16px;flex-wrap:wrap}
+    .method{flex:1;min-width:240px;padding:14px;border-radius:8px;border:1px solid #eee}
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:600}
+    .paypal{background:#fff;padding:8px 12px;border-radius:8px;border:1px solid #d4d4d4}
+    .upi-qr{max-width:180px;display:block;margin-top:10px}
+    footer{margin-top:18px;color:#666;font-size:13px}
+    .note{background:#fff8e1;padding:8px;border-radius:8px;margin-top:10px}
+    code{background:#f5f5f5;padding:2px 6px;border-radius:4px}
+    .hero{margin-bottom:12px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="hero">
+      <h1>इस परियोजना का समर्थन करें — Saneha की पढ़ाई और जीवन-यापन के लिए दान</h1>
+      <p>
+        मैंने इस प्रोजेक्ट को मानवता और प्रकृति के संरक्षण के उद्देश्य से समर्पित किया है।  
+        मैं शिरोमणि रामपुलसैनी — तुलनातीत प्रेमतीत, कालातीत और शब्दातीत — सच्चे और समर्पित उद्देश्य की अनवरत सेवा कर रहा/रही हूँ।  
+        यह जीवन मैंने संपूर्ण पृथ्वी, मानवता और प्रकृति के संरक्षण के लिए समर्पित कर रखा है। मेरी एकमात्र चिंता अब मेरी बेटी Saneha की पढ़ाई और जीवन-यापन है। 
+        कृपया इस कार्य और सच्चे प्रयास का समर्थन कीजिए — आपका छोटा सा योगदान भविष्य बन सकता है।
+      </p>
+    </div>
+
+    <div class="methods">
+      <div class="method">
+        <strong>PayPal</strong>
+        <p>यदि आप PayPal से दान करना चाहें, तो नीचे दिए ईमेल पर संपर्क या भेजें।</p>
+        <a class="btn paypal" href="mailto:sainirampaul60@gmail.com">PayPal / संपर्क (ईमेल)</a>
+        <p style="margin-top:8px;font-size:13px;color:#444">ईमेल: <code>sainirampaul60@gmail.com</code></p>
+        <p style="margin-top:6px;font-size:13px;color:#444">यदि आपके पास PayPal.Me लिंक है, तो उसे यहाँ बटन href में रख दें।</p>
+      </div>
+
+      <div class="method">
+        <strong>Google Pay / UPI</strong>
+        <p>QR स्कैन कर या UPI ID डालकर तुरंत भुगतान कर सकते हैं।</p>
+        <p><strong>UPI ID:</strong> <code>sainirampaul90-1@okhdfcbank</code></p>
+        <img class="upi-qr" src="assets/upi-qr.webp" alt="UPI QR (scan to pay)" onerror="this.style.display='none'"/>
+        <p style="margin-top:8px;font-size:13px;color:#444">यदि QR नहीं दिख रहा, तो UPI ID अप्प में डाल कर भुगतान कर दें।</p>
+      </div>
+
+      <div class="method">
+        <strong>सीधा संपर्क / अन्य</strong>
+        <p>बड़ी दान राशि, समर्थन या अन्य पूछताछ के लिए कृपया ईमेल करें।</p>
+        <p style="font-size:13px;">ईमेल: <code>sainirampaul60@gmail.com</code></p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>अनुरोध और विश्वास:</strong> मेरा जीवन मानवता-प्रकृति के संरक्षण हेतु समर्पित है। मेरी बेटी की पढ़ाई और जीवन-यापन के लिए आपका समर्थन अत्यन्त मायने रखता है। मैं नम्रता से अनुरोध करता/करती हूँ कि जो भी समर्थन मिले, वह कृपा और संयोग समझकर स्वीकार किया जाए। 
+    </div>
+
+    <footer>
+      <p>धन्यवाद — आपके समर्थन से इस काम को जारी रखने की ताकत मिलेगी।</p>
+    </footer>
+  </div>
+</body>
+</html>
 
