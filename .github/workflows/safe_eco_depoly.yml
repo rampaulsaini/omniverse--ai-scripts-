@@ -40,3 +40,37 @@ jobs:
           git add releases/ scripts/ || echo "No files to commit"
           git commit -m "Automated EcoSim + PDF update [safe deploy]" || echo "No changes"
           git push https://x-access-token:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+name: Safe EcoSim + PDF Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-generate-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+
+      - name: Generate PDF
+        run: |
+          python scripts/generate_pdf.py --output output/report.pdf
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosim-pdf
+          path: output/report.pdf
+          
