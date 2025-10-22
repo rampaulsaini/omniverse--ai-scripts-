@@ -1,3 +1,5 @@
+git clone https://github.com/rampaulsaini/omniverse--ai-scripts-.git
+cd omniverse--ai-scripts-
 name: Safe EcoSim + PDF Deploy
 
 on:
