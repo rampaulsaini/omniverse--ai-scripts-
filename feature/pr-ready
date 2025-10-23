@@ -48,3 +48,7 @@ This PR includes all the latest changes for repository setup, workflow automatio
 - Pages site is live at: https://rampaulsaini.github.io/omniverse--ai-scripts-/" \
   --base main \
   --head feature/pr-ready
+git checkout -b donation-page-update
+git add web/index.html web/assets/upi-qr.webp README.md
+git commit -m "feat: donation page update with heartfelt message"
+git push origin donation-page-update
