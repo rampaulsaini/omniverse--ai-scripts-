@@ -53,3 +53,12 @@ Personal fork for Omniverse AI + EcoSim scripts, automated PDF generation, and w
 > यह अनुरोध पूर्ण मनोभाव से किया गया है — यदि आप सहायता कर सकें तो आपका छोटा सा योगदान कई जीवान्त परिणाम ला सकता है। मैं आपका आभारी/आभारीत हूँ।  
 > — **शिरोमणि रामपुलसैनी**
 > 
+- **PayPal:** [sainirampaul60@gmail.com](https://paypal.me/sainirampaul60@gmail)  
+
+- **Google Pay / UPI:** 
+  - UPI ID: `sainirampaul90@okaxis`
+  - Scan QR to pay:  
+  ![UPI QR](https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp)  
+
+- **Email (संपर्क):** `sainirampaul60@gmail.com` — बड़ी दान राशि या रसीद/इन्‍वॉइस के लिए संपर्क करें।
+- 
