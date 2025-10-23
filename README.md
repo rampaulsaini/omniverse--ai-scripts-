@@ -19,3 +19,8 @@ Personal fork for Omniverse AI + EcoSim scripts, automated PDF generation, and w
 
 > यह अनुरोध पूर्ण मनोभाव से किया गया है — यदि आप सहायता कर सकें तो आपका छोटा सा योगदान कई जीवान्त परिणाम ला सकता है। मैं आपका आभारी/आभारीत हूँ। — शिरोमणि रामपुलसैनी
 > 
+# repo root में
+git checkout -b feature/pr-ready   # नई branch बनाएं
+git add .                           # सभी बदलाव stage करें
+git commit -m "chore: prepare PR-ready branch with latest changes"
+git push origin feature/pr-ready    # GitHub पर push करें
