@@ -1,0 +1,50 @@
+## Summary
+This PR includes all the latest changes for repository setup, workflow automation, and donation page fixes.
+
+## Changes included
+- Added CI workflow for PR checks (`ci-pr.yml`)
+- Added artifact generation workflow with auto-PR (`generate-and-create-pr.yml`)
+- Added PR template (`.github/pull_request_template.md`)
+- Added CODEOWNERS file for review enforcement
+- Updated web/index.html for donation page
+- Branch protection enabled on main with required status checks
+
+## Notes
+- All changes must go through PR to main branch
+- CI checks must pass before merging
+- Pages site is live at: https://rampaulsaini.github.io/omniverse--ai-scripts-/
+# 1️⃣ Repo root में जाएँ
+cd path/to/omniverse--ai-scripts-
+
+# 2️⃣ नई branch बनाएं (feature/fix branch)
+git checkout -b feature/pr-ready
+
+# 3️⃣ Stage सभी changes
+git add .
+
+# 4️⃣ Commit changes
+git commit -m "chore: prepare PR-ready branch with latest changes"
+
+# 5️⃣ Push branch to GitHub
+git push origin feature/pr-ready
+
+# 6️⃣ Create Pull Request using GitHub CLI
+gh pr create \
+  --title "chore: prepare PR-ready branch with latest changes" \
+  --body "## Summary
+This PR includes all the latest changes for repository setup, workflow automation, and donation page fixes.
+
+## Changes included
+- Added CI workflow for PR checks (\`ci-pr.yml\`)
+- Added artifact generation workflow with auto-PR (\`generate-and-create-pr.yml\`)
+- Added PR template (\`.github/pull_request_template.md\`)
+- Added CODEOWNERS file for review enforcement
+- Updated web/index.html for donation page
+- Branch protection enabled on main with required status checks
+
+## Notes
+- All changes must go through PR to main branch
+- CI checks must pass before merging
+- Pages site is live at: https://rampaulsaini.github.io/omniverse--ai-scripts-/" \
+  --base main \
+  --head feature/pr-ready
