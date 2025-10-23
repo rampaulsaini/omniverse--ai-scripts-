@@ -1,0 +1,97 @@
+name: Safe Eco Deploy (debug)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read    # keep minimal; change to write only if you need commit/push
+  actions: read
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy (with debug)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Print quick environment info
+        run: |
+          echo "RUNNER: $RUNNER_NAME"
+          echo "GITHUB_REF: $GITHUB_REF"
+          echo "GITHUB_SHA: $GITHUB_SHA"
+          python --version || true
+          node --version || true
+          uname -a
+
+      - name: Show repo top-level files (debug)
+        run: |
+          echo "==== top-level files ===="
+          ls -la || true
+          echo "==== web folder ===="
+          ls -la web || true
+          echo "==== web assets ===="
+          ls -la web/assets || true
+          echo "==== src folder ===="
+          ls -la src || true
+          echo "==== show Dockerfile ===="
+          if [ -f Dockerfile ]; then echo "Dockerfile size:"; wc -c Dockerfile; else echo "No Dockerfile"; fi
+        shell: bash
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies if requirements exists
+        run: |
+          if [ -f "src/requirements.txt" ]; then
+            echo "Installing requirements..."
+            python -m pip install --upgrade pip
+            python -m pip install -r src/requirements.txt
+          else
+            echo "No requirements.txt found at src/requirements.txt"
+          fi
+
+      - name: Run sample script with trace capture
+        run: |
+          set -o pipefail
+          mkdir -p tmp-logs
+          echo "Running sample script..." > tmp-logs/run-log.txt
+          if [ -f "src/sample_script.py" ]; then
+            python src/sample_script.py 2>&1 | tee tmp-logs/run-log.txt || rc=$?
+          else
+            echo "ERROR: src/sample_script.py not found!" | tee tmp-logs/run-log.txt
+            rc=2
+          fi
+          echo "Exit code: ${rc:-0}" | tee -a tmp-logs/run-log.txt
+          # Exit with same code so Actions shows failure if rc != 0
+          if [ "${rc:-0}" -ne 0 ]; then
+            exit ${rc}
+          fi
+
+      - name: List generated docs
+        run: |
+          echo "Listing docs folder:"
+          ls -la docs || true
+
+      - name: Upload debug logs artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: safe-eco-debug-logs
+          path: tmp-logs/**
+
+      - name: (Optional) Build Docker image for Koyeb test
+        if: success() && (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main')
+        run: |
+          if [ -f Dockerfile ]; then
+            echo "Building Docker image (test build)..."
+            docker build -t omniverse-eco-test:ci . --no-cache
+            echo "Docker build completed"
+          else
+            echo "No Dockerfile present - skipping docker build"
+          fi
