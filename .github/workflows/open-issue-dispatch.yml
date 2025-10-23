@@ -1,0 +1,32 @@
+name: Open issue (manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  open_issue:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Create issue via REST API
+        shell: bash
+        run: |
+          # build JSON payload in a safe here-doc (GitHub expressions expand before run)
+          cat > /tmp/payload.json <<EOF
+          {
+            "title": "Manual issue: please review - run by workflow_dispatch",
+            "body": "This issue was opened by the workflow **${{ github.workflow }}** (event: ${{ github.event_name }}).\n\nRepository: ${{ github.repository }}\nTriggered by actor: ${{ github.actor }}\nRun: ${{ github.run_url }}"
+          }
+          EOF
+
+          curl --fail --show-error --silent \
+            -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            --data @/tmp/payload.json \
+            "https://api.github.com/repos/${{ github.repository }}/issues"
+            
