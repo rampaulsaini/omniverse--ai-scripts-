@@ -95,3 +95,8 @@ jobs:
           else
             echo "No Dockerfile present - skipping docker build"
           fi
+git checkout -b ci/debug-deploy
+git add .github/workflows/safe_eco_deploy_debug.yml
+git commit -m "chore(ci): add debug-friendly safe eco deploy workflow"
+git push -u origin ci/debug-deploy
+# create PR and merge OR push into main to trigger (if you prefer immediate)
