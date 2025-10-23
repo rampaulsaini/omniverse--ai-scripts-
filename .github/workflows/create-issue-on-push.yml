@@ -1,0 +1,44 @@
+name: Create issue on push
+
+on:
+  push:
+    branches: [ main ]   # या आपकी target branch
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+      - name: Create issue using REST API
+        shell: bash
+        run: |
+          # prepare nicely formatted body referencing the commit and workflow
+          COMMIT_SHA="${{ github.sha }}"
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${COMMIT_SHA}"
+          BODY=$(cat <<EOF
+This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**.
+
+- Repository: ${{ github.repository }}
+- Branch: ${{ github.ref }}
+- Commit: [$COMMIT_SHA]($COMMIT_URL)
+- Actor: ${{ github.actor }}
+
+The commit message and details can be viewed at the commit link above.
+EOF
+)
+
+          # JSON payload (escaped)
+          PAYLOAD=$(jq -n --arg t "Automated issue for commit ${COMMIT_SHA}" --arg b "$BODY" '{title:$t, body:$b}')
+
+          # POST to GitHub issues API
+          curl --fail --show-error --silent \
+            -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            --data "$PAYLOAD" \
+            "https://api.github.com/repos/${{ github.repository }}/issues"
+            
