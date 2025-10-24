@@ -1,0 +1,164 @@
+name: Create Donation PR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "actions@github.com"
+
+      - name: Create branch
+        id: create_branch
+        run: |
+          BRANCH="scaffold/donation-$(date +%s)"
+          git checkout -b "$BRANCH"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Add donation files
+        run: |
+          mkdir -p web/assets
+
+          cat > web/index.html <<'HTML'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Support Omniverse AI Scripts — Donate</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f6f8fa}
+    .card{background:white;padding:28px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.08);max-width:760px;width:100%}
+    h1{margin:0 0 8px;font-size:20px}
+    p{margin:6px 0 18px;color:#333}
+    .methods{display:flex;gap:16px;flex-wrap:wrap}
+    .method{flex:1;min-width:220px;padding:14px;border-radius:8px;border:1px solid #eee}
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:600}
+    .paypal{background:#fff;padding:8px 12px;border-radius:8px;border:1px solid #d4d4d4}
+    .upi-qr{max-width:180px;display:block;margin-top:10px}
+    footer{margin-top:18px;color:#666;font-size:13px}
+    .note{background:#fff8e1;padding:8px;border-radius:8px;margin-top:10px}
+    code{background:#f5f5f5;padding:2px 6px;border-radius:4px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Support this project — Help Saneha's education</h1>
+    <p>If this project helps you, a small donation will go a long way toward my daughter's education and living expenses. Thank you ❤️</p>
+
+    <div class="methods">
+      <div class="method">
+        <strong>PayPal</strong>
+        <p>Click below to open your email client to contact or donate via PayPal.</p>
+        <a class="btn paypal" href="mailto:sainirampaul60@gmail.com">Contact / Donate via PayPal (email)</a>
+        <p style="margin-top:8px;font-size:13px;color:#444">Or send to: <code>sainirampaul60@gmail.com</code></p>
+      </div>
+
+      <div class="method">
+        <strong>Google Pay / UPI</strong>
+        <p>Scan the QR or use the UPI ID in your UPI app to pay instantly.</p>
+        <p><strong>UPI ID:</strong> <code>sainirampaul90-1@okhdfcbank</code></p>
+        <img class="upi-qr" src="assets/upi-qr.webp" alt="UPI QR (scan to pay)" onerror="this.style.display='none'"/>
+        <p style="margin-top:8px;font-size:13px;color:#444">If QR doesn't display, use the UPI ID above in your UPI app.</p>
+      </div>
+
+      <div class="method">
+        <strong>Other</strong>
+        <p>Want to contact me first? Use email below or open an issue in the repo.</p>
+        <p style="font-size:13px;">Email: <code>sainirampaul60@gmail.com</code></p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Privacy:</strong> I will not share donor details publicly without consent. For large donations, please email to coordinate receipts/info.
+    </div>
+
+    <footer>
+      <p>Thank you for supporting open-source and Saneha's future.</p>
+    </footer>
+  </div>
+</body>
+</html>
+HTML
+
+          cat > Dockerfile <<'DOCKER'
+# Use a small Python base image
+FROM python:3.11-slim
+
+# Create non-root user
+RUN useradd -m appuser
+WORKDIR /home/appuser
+
+# Copy web static files
+COPY web ./web
+
+# Expose port that Koyeb expects
+EXPOSE 8080
+
+# Switch to non-root
+USER appuser
+
+# Use Python's builtin http.server to serve static site on startup
+CMD ["python", "-m", "http.server", "8080", "--directory", "web"]
+DOCKER
+
+          # append donation snippet to README if present
+          if [ -f README.md ]; then
+            cat >> README.md <<'RD'
+
+## Support this project / Donate
+
+If this project helped you, please consider supporting my daughter's education (Saneha Saini) and ongoing maintenance of these tools.
+
+- **PayPal:** send to `sainirampaul60@gmail.com`
+- **Google Pay / UPI:** `sainirampaul90-1@okhdfcbank` (or scan the QR on the project website)
+- **Email:** `sainirampaul60@gmail.com` — for large donations or invoicing.
+
+Any donation, big or small, is deeply appreciated and will be used for education and living expenses. Thank you.
+RD
+          fi
+
+          # try download QR image (optional)
+          curl -L -o web/assets/upi-qr.webp "https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp" || true
+
+          git add web/index.html Dockerfile web/assets/upi-qr.webp README.md || true
+          git commit -m "feat: add donation page and Dockerfile (automated)" || echo "no changes to commit"
+
+      - name: Push branch
+        env:
+          TOKEN: ${{ secrets.AUTO_PR_TOKEN }}
+        run: |
+          BRANCH=${{ steps.create_branch.outputs.branch }}
+          echo "Pushing branch: $BRANCH"
+          git push "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git" $BRANCH --set-upstream
+
+      - name: Create Pull Request
+        env:
+          TOKEN: ${{ secrets.AUTO_PR_TOKEN }}
+        run: |
+          BRANCH=${{ steps.create_branch.outputs.branch }}
+          REPO=${{ github.repository }}
+          echo "Creating PR from $BRANCH -> main"
+          response=$(curl -s -X POST "https://api.github.com/repos/${REPO}/pulls" \
+            -H "Authorization: token ${TOKEN}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d $'{"title":"feat: Donation page + Dockerfile — support Saneha\'s education","body":"This PR adds a donation/support landing page and Dockerfile. Dedicated to humanity & natural preservation. Please support Saneha Saini\'s education and life.\n\n- PayPal: sainirampaul60@gmail.com\n- GPay/UPI: sainirampaul90-1@okhdfcbank\n\nPrivacy note: donor details will not be shared publicly without consent.","head":"'${BRANCH}'","base":"main"}')
+
+          echo "$response" | python3 -m json.tool || echo "$response"
+          echo "---- PR html_url ----"
+          echo "$response" | python3 -c "import sys,json; r=json.load(sys.stdin); print(r.get('html_url',''))" || true
+
+      - name: Done
+        run: echo "Workflow finished. If PR html_url printed above, open it to review/merge."
+        
