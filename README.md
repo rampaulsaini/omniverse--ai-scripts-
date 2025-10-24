@@ -1,26 +1,21 @@
-#!/usr/bin/env bash
-set -euo pipefail
+FROM python:3.11-slim
+RUN useradd -m appuser
+WORKDIR /home/appuser
+COPY web ./web
+EXPOSE 8080
+USER appuser
+CMD ["python", "-m", "http.server", "8080", "--directory", "web"]
+# omniverse--ai-scripts-
 
-# CONFIG - change if needed
-REPO_DIR="${1:-.}"   # default current dir; or pass path as first arg
-QR_URL="https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp"
+Personal fork for Omniverse AI + EcoSim scripts, automated PDF generation, and workflow testing. Fully safe, no upstream push.
 
-cd "$REPO_DIR"
+## Donate / Support
+If this project helped you, please consider supporting Saneha Saini's education and living expenses:
 
-# ensure git repo
-if [ ! -d .git ]; then
-  echo "Not a git repo in $REPO_DIR. Clone first or run from repo root."
-  exit 1
-fi
+- **PayPal:** https://paypal.me/yourid  (replace with your PayPal.Me link or keep `sainirampaul60@gmail.com`)
+- **Google Pay / UPI:** `sainirampaul90-1@okhdfcbank` (scan the QR on the project website)
 
-BRANCH="restore/site-$(date +%s)"
-git checkout -b "$BRANCH"
-
-# create folders
-mkdir -p web/assets
-
-# write web/index.html
-cat > web/index.html <<'HTML'
+Website (donation page): `https://<your-app>.koyeb.app` (will appear after deploy)
 <!doctype html>
 <html lang="en">
 <head>
@@ -50,8 +45,8 @@ cat > web/index.html <<'HTML'
     <div class="methods">
       <div class="method">
         <strong>PayPal</strong>
-        <p>Contact / Donate via PayPal email:</p>
-        <a class="btn paypal" href="mailto:sainirampaul60@gmail.com">Contact / Donate via PayPal (email)</a>
+        <p>Donate via PayPal link:</p>
+        <a class="btn paypal" href="https://paypal.me/yourid" target="_blank" rel="noopener">Donate with PayPal</a>
         <p style="margin-top:8px;font-size:13px;color:#444">Or send to: <code>sainirampaul60@gmail.com</code></p>
       </div>
 
@@ -65,56 +60,52 @@ cat > web/index.html <<'HTML'
 
       <div class="method">
         <strong>Other</strong>
-        <p>Want to contact me first? Use email below or open an issue in the repo.</p>
-        <p style="font-size:13px;">Email: <code>sainirampaul60@gmail.com</code></p>
+        <p>Contact: <code>sainirampaul60@gmail.com</code></p>
       </div>
     </div>
 
     <div class="note">
-      <strong>Privacy:</strong> I will not share donor details publicly without consent. For large donations, please email to coordinate receipts/info.
+      <strong>Privacy:</strong> Donor details will not be shared publicly without consent.
     </div>
 
     <footer>
-      <p>Thank you for supporting open-source and Saneha's future.</p>
+      <p>Thank you for supporting Saneha's future.</p>
     </footer>
   </div>
 </body>
 </html>
-HTML
+pkg update -y
+pkg install git -y
+cd $HOME
+git clone https://github.com/rampaulsaini/omniverse--ai-scripts-.git
+cd omniverse--ai-scripts-
 
-# Dockerfile
-cat > Dockerfile <<'DOCKER'
-FROM python:3.11-slim
-RUN useradd -m appuser
-WORKDIR /home/appuser
-COPY web ./web
-EXPOSE 8080
-USER appuser
-CMD ["python", "-m", "http.server", "8080", "--directory", "web"]
-DOCKER
-
-# README restore (minimal)
-cat > README.md <<'MD'
+# Replace README
+cat > README.md <<'EOF'
 # omniverse--ai-scripts-
 
 Personal fork for Omniverse AI + EcoSim scripts, automated PDF generation, and workflow testing. Fully safe, no upstream push.
 
 ## Donate / Support
-- PayPal: sainirampaul60@gmail.com
+- PayPal: https://paypal.me/yourid
 - Google Pay / UPI: sainirampaul90-1@okhdfcbank
-MD
+EOF
 
-# try download QR
-if command -v curl >/dev/null 2>&1; then
-  curl -L -o web/assets/upi-qr.webp "$QR_URL" || true
-elif command -v wget >/dev/null 2>&1; then
-  wget -O web/assets/upi-qr.webp "$QR_URL" || true
-fi
+# Create web files
+mkdir -p web/assets
+cat > web/index.html <<'EOF'
+(paste the HTML from above)
+EOF
 
-# commit & push
-git add web/index.html Dockerfile README.md web/assets/upi-qr.webp || true
-git commit -m "restore: donation page, Dockerfile and QR" || true
-git push -u origin "$BRANCH"
+# If you have the QR file on phone, move it into repo at web/assets/upi-qr.webp,
+# or download it:
+curl -L -o web/assets/upi-qr.webp "https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp" || true
 
-echo "Pushed branch $BRANCH to origin. If you want, create PR or I can guide next steps."
-echo "If push failed, paste error here and I'll fix it."
+# Dockerfile
+cat > Dockerfile <<'EOF'
+(paste Dockerfile from above)
+EOF
+
+git add README.md web/index.html web/assets/upi-qr.webp Dockerfile
+git commit -m "restore donation page, QR and Dockerfile"
+git push origin main
