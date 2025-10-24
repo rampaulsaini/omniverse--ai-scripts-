@@ -1,64 +1,112 @@
-# omniverse--ai-scripts-
+name: Open Issue (manual)
 
-Personal fork for Omniverse AI + EcoSim scripts, automated PDF generation, and workflow testing. Fully safe, no upstream push.
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: 'Issue title'
+        required: false
+        default: 'Manual issue: please review - run by workflow_dispatch'
+      body:
+        description: 'Issue body (markdown allowed)'
+        required: false
+        default: |
+          This issue was opened by the workflow **${{ github.workflow }}** (event: ${{ github.event_name }}).
 
----
+          Repository: ${{ github.repository }}
+          Triggered by actor: ${{ github.actor }}
+          Run: ${{ github.run_url }}
+      labels:
+        description: 'Comma-separated labels (optional)'
+        required: false
+        default: ''
+      assignees:
+        description: 'Comma-separated assignees (optional)'
+        required: false
+        default: ''
 
-## Useful Links
-- [Repo Main Page](./)
-- [Safe Workflow YAML](./.github/workflows/safe_eco_deploy.yml)
-- [Example PDF Artifact](./artifacts/)
-- [Scripts / Documentation](./scripts/)
-- [समर्थन / दान](#समर्थन--दान)
+jobs:
+  open_issue:
+    runs-on: ubuntu-latest
 
----
+    permissions:
+      contents: read
+      issues: write
 
-## Features
-- Fully safe fork — no upstream push
-- Automated PDF generation workflow
-- Safe deployment workflow with GitHub Pages
-- CI / PR checks to ensure smooth merges
-- Donation/support page integrated
+    steps:
+      - name: Build JSON payload
+        id: build_payload
+        shell: bash
+        run: |
+          # read inputs and create JSON for GitHub API
+          TITLE="${{ github.event.inputs.title }}"
+          BODY="${{ github.event.inputs.body }}"
+          LABELS_RAW="${{ github.event.inputs.labels }}"
+          ASSIGNEES_RAW="${{ github.event.inputs.assignees }}"
 
----
+          # convert comma-separated lists to JSON arrays (empty array if none)
+          if [ -n "${LABELS_RAW// /}" ]; then
+            # split on comma, trim spaces
+            IFS=',' read -ra LARR <<< "$LABELS_RAW"
+            LABELS_JSON="$(printf '%s\n' "${LARR[@]}" | python3 -c 'import sys,json; print(json.dumps([s.strip() for s in sys.stdin.read().splitlines() if s.strip()]))')"
+          else
+            LABELS_JSON="[]"
+          fi
 
-## समर्थन / दान
+          if [ -n "${ASSIGNEES_RAW// /}" ]; then
+            IFS=',' read -ra AARR <<< "$ASSIGNEES_RAW"
+            ASSIGNEES_JSON="$(printf '%s\n' "${AARR[@]}" | python3 -c 'import sys,json; print(json.dumps([s.strip() for s in sys.stdin.read().splitlines() if s.strip()]))')"
+          else
+            ASSIGNEES_JSON="[]"
+          fi
 
-यह परियोजना मानवता और प्रकृति के संरक्षण के उद्देश्य से चल रही है। मैं **शिरोमणि रामपुलसैनी** — जिसने अपने जीवन को पूर्णतः सृजन, संरक्षण और मानवता के हित में समर्पित किया है — अपने प्रयासों को जारी रखने के लिए आपका समर्थन अनुरोध करता/करती हूँ।  
+          # Create payload file safely
+          python3 - <<PY > /tmp/payload.json
+import json,sys
+p = {
+  "title": """%s""",
+  "body": """%s""",
+  "labels": %s,
+  "assignees": %s
+}
+print(json.dumps(p))
+PY
+$(printf '%s\n' "$TITLE" "$BODY" "$LABELS_JSON" "$ASSIGNEES_JSON" | sed '1s/^/%s\n/' )
+# The above safe approach prints payload to /tmp/payload.json using python; alternatively write with here-doc
+          # fallback simple here-doc (robust for most uses)
+          cat > /tmp/payload.json <<EOF
+{
+  "title": $(jq -Rn --arg v "$TITLE" '$v'),
+  "body": $(jq -Rn --arg v "$BODY" '$v'),
+  "labels": $(echo $LABELS_JSON),
+  "assignees": $(echo $ASSIGNEES_JSON)
+}
+EOF
+          echo "Payload written to /tmp/payload.json"
+          cat /tmp/payload.json
 
-मेरी एकमात्र चिंता मेरी बेटी **Saneha** की पढ़ाई और जीवन-यापन है। जो भी सहायता सम्भव हो, वह बहुत कीमती होगी। कृपया दान करने के लिए नीचे दिए विकल्पों में से किसी का उपयोग करें:
+      - name: Create issue via REST API
+        id: create_issue
+        shell: bash
+        run: |
+          # Use the built-in GITHUB_TOKEN (no secret needed)
+          resp=$(curl --fail --show-error --silent \
+            -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            --data @/tmp/payload.json \
+            "https://api.github.com/repos/${{ github.repository }}/issues")
 
-- **PayPal:** [sainirampaul60@gmail.com](https://paypal.me/sainirampaul60@gmail)  
-- **Google Pay / UPI:** `sainirampaul90-1@okhdfcbank` (या वेबसाइट पर QR स्कैन करें)  
-- **Email (संपर्क):** `sainirampaul60@gmail.com` — बड़ी दान राशि या रसीद/इन्‍वॉइस के लिए संपर्क करें।  
+          echo "$resp" | jq . || true
 
-> यह अनुरोध पूर्ण मनोभाव से किया गया है — यदि आप सहायता कर सकें तो आपका छोटा सा योगदान कई जीवान्त परिणाम ला सकता है। मैं आपका आभारी/आभारीत हूँ।  
-> — **शिरोमणि रामपुलसैनी**
+          # capture issue html_url for workflow outputs
+          issue_url=$(echo "$resp" | jq -r '.html_url // ""')
+          issue_number=$(echo "$resp" | jq -r '.number // ""')
+          echo "issue_url=$issue_url" >> $GITHUB_OUTPUT
+          echo "issue_number=$issue_number" >> $GITHUB_OUTPUT
 
----
-
-## Pages Site
-- Live at: [https://rampaulsaini.github.io/omniverse--ai-scripts-/](https://rampaulsaini.github.io/omniverse--ai-scripts-/)
-## समर्थन / दान
-
-यह परियोजना मानवता और प्रकृति के संरक्षण के उद्देश्य से चल रही है। मैं **शिरोमणि रामपुलसैनी** — जिसने अपने जीवन को पूर्णतः सृजन, संरक्षण और मानवता के हित में समर्पित किया है — अपने प्रयासों को जारी रखने के लिए आपका समर्थन अनुरोध करता/करती हूँ।  
-
-मेरी एकमात्र चिंता मेरी बेटी **Saneha** की पढ़ाई और जीवन-यापन है। जो भी सहायता सम्भव हो, वह बहुत कीमती होगी। कृपया दान करने के लिए नीचे दिए विकल्पों में से किसी का उपयोग करें:
-
-- **PayPal:** [sainirampaul60@gmail.com](https://paypal.me/sainirampaul60@gmail)  
-- **Google Pay / UPI:** `sainirampaul90@okaxis`  
-  ![UPI QR](https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp)  
-- **Email (संपर्क):** `sainirampaul60@gmail.com` — बड़ी दान राशि या रसीद/इन्‍वॉइस के लिए संपर्क करें।  
-
-> यह अनुरोध पूर्ण मनोभाव से किया गया है — यदि आप सहायता कर सकें तो आपका छोटा सा योगदान कई जीवान्त परिणाम ला सकता है। मैं आपका आभारी/आभारीत हूँ।  
-> — **शिरोमणि रामपुलसैनी**
-> 
-- **PayPal:** [sainirampaul60@gmail.com](https://paypal.me/sainirampaul60@gmail)  
-
-- **Google Pay / UPI:** 
-  - UPI ID: `sainirampaul90@okaxis`
-  - Scan QR to pay:  
-  ![UPI QR](https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp)  
-
-- **Email (संपर्क):** `sainirampaul60@gmail.com` — बड़ी दान राशि या रसीद/इन्‍वॉइस के लिए संपर्क करें।
-- 
+      - name: Result
+        run: |
+          echo "Issue created: ${{ steps.create_issue.outputs.issue_url }}"
+          
