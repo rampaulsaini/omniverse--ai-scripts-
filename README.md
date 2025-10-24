@@ -17,6 +17,29 @@ If this project helps you, please consider supporting Saneha Saini's education a
 ---
 
 **Note:** This README is a minimal restore. If you want, I can expand it with the full project instructions and links after the repo is stable.
+# 1) install git in Termux (only if not installed)
+pkg update -y
+pkg install git -y
+
+# 2) clone your repo (use SSH if you have keys, else HTTPS)
+git clone https://github.com/rampaulsaini/omniverse--ai-scripts-.git
+cd omniverse--ai-scripts-
+
+# 3) create/replace workflow file
+mkdir -p .github/workflows
+cat > .github/workflows/open-issue-dispatch.yml <<'EOF'
+[PASTE THE FIXED YAML HERE]
+EOF
+
+# 4) replace README
+cat > README.md <<'EOF'
+[PASTE THE MINIMAL README HERE]
+EOF
+
+# 5) commit & push (you will need credentials - use username+password or gh cli)
+git add .github/workflows/open-issue-dispatch.yml README.md
+git commit -m "fix: restore README and open-issue workflow"
+git push origin main
 name: Open Issue (manual)
 
 on:
@@ -63,11 +86,8 @@ jobs:
           LABELS_RAW="${{ github.event.inputs.labels }}"
           ASSIGNEES_RAW="${{ github.event.inputs.assignees }}"
 
-          # Convert comma-separated strings into JSON arrays using jq
-          # Trim spaces, ignore empty items
           labels_json='[]'
           if [ -n "${LABELS_RAW// /}" ]; then
-            # split and build array
             IFS=',' read -ra _L <<< "$LABELS_RAW"
             printf '%s\n' "${_L[@]}" | python3 -c 'import sys,json; print(json.dumps([s.strip() for s in sys.stdin.read().splitlines() if s.strip()]))' > /tmp/labels.json
             labels_json=$(cat /tmp/labels.json)
@@ -80,7 +100,6 @@ jobs:
             assignees_json=$(cat /tmp/assignees.json)
           fi
 
-          # Produce final payload using jq to ensure proper JSON quoting
           jq -n --arg title "$TITLE" --arg body "$BODY" \
             --argjson labels "$labels_json" --argjson assignees "$assignees_json" \
             '{title:$title, body:$body, labels:$labels, assignees:$assignees}' > /tmp/payload.json
@@ -99,51 +118,18 @@ jobs:
             -H "Content-Type: application/json" \
             --data @/tmp/payload.json \
             "https://api.github.com/repos/${{ github.repository }}/issues")
-
           echo "$resp" | jq . || true
-
           issue_url=$(echo "$resp" | jq -r '.html_url // ""')
-          issue_number=$(echo "$resp" | jq -r '.number // ""')
           echo "issue_url=$issue_url" >> $GITHUB_OUTPUT
-          echo "issue_number=$issue_number" >> $GITHUB_OUTPUT
 
       - name: Result
         run: |
           echo "Issue created: ${{ steps.create_issue.outputs.issue_url }}"
-          # ensure clean
-git checkout main
-git pull origin main
-
-# Restore README
-cat > README.md <<'EOF'
-# omniverse--ai-scripts-
+          # omniverse--ai-scripts-
 
 Personal fork for Omniverse AI + EcoSim scripts, automated PDF generation, and workflow testing. Fully safe, no upstream push.
 
-## What this repo contains (base)
-- `.github/workflows/` — CI / automation workflows
-- `web/` — static donation page
-- `src/` — scripts
-- `docs/` — generated PDFs and docs
-
 ## Donate / Support
-If this project helps you, please consider supporting Saneha Saini's education and livelihood:
-
 - PayPal: `sainirampaul60@gmail.com`
 - Google Pay / UPI: `sainirampaul90-1@okhdfcbank`
-
----
-
-**Note:** This README is a minimal restore. If you want, I can expand it with the full project instructions and links after the repo is stable.
-EOF
-
-# Replace workflow
-mkdir -p .github/workflows
-cat > .github/workflows/open-issue-dispatch.yml <<'EOF'
-[PASTE THE FULL YAML FROM ABOVE HERE - including the leading 'name: Open Issue (manual)' line]
-EOF
-
-# Stage / commit / push
-git add README.md .github/workflows/open-issue-dispatch.yml
-git commit -m "fix: restore minimal README and robust open-issue-dispatch workflow"
-git push origin HEAD
+- 
