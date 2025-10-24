@@ -1,3 +1,23 @@
+# 1. make a branch, remove bad content from README and commit
+git checkout -b fix/readme-remove-yaml
+
+# Edit README.md (use your editor) and remove the pasted YAML block
+# On a PC you can use: nano README.md
+# On mobile Termux use: nano or sed; but web UI is easier.
+
+git add README.md
+git commit -m "fix: remove accidental workflow YAML from README"
+
+# 2. create workflow file
+mkdir -p .github/workflows
+cat > .github/workflows/open-issue-dispatch.yml <<'YAML'
+# (paste the corrected YAML provided below)
+YAML
+
+git add .github/workflows/open-issue-dispatch.yml
+git commit -m "chore: add Open Issue manual workflow"
+git push -u origin HEAD
+# Then open a PR on GitHub for merge (or merge if you can)
 name: Open Issue (manual)
 
 on:
@@ -38,15 +58,12 @@ jobs:
         id: build_payload
         shell: bash
         run: |
-          # read inputs and create JSON for GitHub API
           TITLE="${{ github.event.inputs.title }}"
           BODY="${{ github.event.inputs.body }}"
           LABELS_RAW="${{ github.event.inputs.labels }}"
           ASSIGNEES_RAW="${{ github.event.inputs.assignees }}"
 
-          # convert comma-separated lists to JSON arrays (empty array if none)
           if [ -n "${LABELS_RAW// /}" ]; then
-            # split on comma, trim spaces
             IFS=',' read -ra LARR <<< "$LABELS_RAW"
             LABELS_JSON="$(printf '%s\n' "${LARR[@]}" | python3 -c 'import sys,json; print(json.dumps([s.strip() for s in sys.stdin.read().splitlines() if s.strip()]))')"
           else
@@ -60,28 +77,11 @@ jobs:
             ASSIGNEES_JSON="[]"
           fi
 
-          # Create payload file safely
-          python3 - <<PY > /tmp/payload.json
-import json,sys
-p = {
-  "title": """%s""",
-  "body": """%s""",
-  "labels": %s,
-  "assignees": %s
-}
-print(json.dumps(p))
-PY
-$(printf '%s\n' "$TITLE" "$BODY" "$LABELS_JSON" "$ASSIGNEES_JSON" | sed '1s/^/%s\n/' )
-# The above safe approach prints payload to /tmp/payload.json using python; alternatively write with here-doc
-          # fallback simple here-doc (robust for most uses)
-          cat > /tmp/payload.json <<EOF
-{
-  "title": $(jq -Rn --arg v "$TITLE" '$v'),
-  "body": $(jq -Rn --arg v "$BODY" '$v'),
-  "labels": $(echo $LABELS_JSON),
-  "assignees": $(echo $ASSIGNEES_JSON)
-}
-EOF
+          # safe payload using jq (available on runner)
+          jq -n --arg title "$TITLE" --arg body "$BODY" \
+            --argjson labels "$LABELS_JSON" --argjson assignees "$ASSIGNEES_JSON" \
+            '{title: $title, body: $body, labels: $labels, assignees: $assignees}' > /tmp/payload.json
+
           echo "Payload written to /tmp/payload.json"
           cat /tmp/payload.json
 
@@ -89,7 +89,6 @@ EOF
         id: create_issue
         shell: bash
         run: |
-          # Use the built-in GITHUB_TOKEN (no secret needed)
           resp=$(curl --fail --show-error --silent \
             -X POST \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
@@ -100,7 +99,6 @@ EOF
 
           echo "$resp" | jq . || true
 
-          # capture issue html_url for workflow outputs
           issue_url=$(echo "$resp" | jq -r '.html_url // ""')
           issue_number=$(echo "$resp" | jq -r '.number // ""')
           echo "issue_url=$issue_url" >> $GITHUB_OUTPUT
