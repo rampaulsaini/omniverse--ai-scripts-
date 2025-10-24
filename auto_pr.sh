@@ -1,26 +1,8 @@
-BRANCH="scaffold/donation-$(date +%s)"
-git checkout -b "$BRANCH"
-git add web/index.html Dockerfile web/assets/upi-qr.webp README.md || true
-git commit -m "feat: add donation page, Dockerfile and QR (auto-PR)" || true
-git push -u origin "$BRANCH"
-
-gh pr create --base main --head "$BRANCH" \
-  --title "feat: Donation page + Dockerfile — support Saneha's education" \
-  --body "This PR adds a donation/support landing page and Dockerfile. PayPal: sainirampaul60@gmail.com; UPI: sainirampaul90-1@okhdfcbank. Privacy: donor details not shared without consent."
-  BRANCH="scaffold/donation-$(date +%s)"
-git checkout -b "$BRANCH"
-git add web/index.html Dockerfile web/assets/upi-qr.webp README.md || true
-git commit -m "feat: add donation page, Dockerfile and QR (auto-PR)" || true
-git push -u origin "$BRANCH"
-
-gh pr create --base main --head "$BRANCH" \
-  --title "feat: Donation page + Dockerfile — support Saneha's education" \
-  --body "This PR adds a donation/support landing page and Dockerfile. PayPal: sainirampaul60@gmail.com; UPI: sainirampaul90-1@okhdfcbank. Privacy: donor details not shared without consent."
-  #!/usr/bin/env bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 # safety
-if [ -z "${GITHUB_TOKEN:-}" ]; then
+if [ -z "${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-}" ]; then
   echo "Error: GITHUB_TOKEN environment variable not set. Set it and re-run."
   echo 'Example: export GITHUB_TOKEN="ghp_..."'
   exit 1
