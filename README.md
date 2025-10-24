@@ -1,111 +1,68 @@
-FROM python:3.11-slim
-RUN useradd -m appuser
-WORKDIR /home/appuser
-COPY web ./web
-EXPOSE 8080
-USER appuser
-CMD ["python", "-m", "http.server", "8080", "--directory", "web"]
-# omniverse--ai-scripts-
+# ![Header](https://t.me/shiromn/304)
+# Omniverse AI Scripts  
+**मानवता, प्रकृति और सत्य का समर्पण**  
+**Dedication to Humanity, Nature, and Truth**
 
-Personal fork for Omniverse AI + EcoSim scripts, automated PDF generation, and workflow testing. Fully safe, no upstream push.
+---
 
-## Donate / Support
-If this project helped you, please consider supporting Saneha Saini's education and living expenses:
+## 🌟 Vision & Purpose / उद्देश्य और संकल्प
 
-- **PayPal:** https://paypal.me/yourid  (replace with your PayPal.Me link or keep `sainirampaul60@gmail.com`)
-- **Google Pay / UPI:** `sainirampaul90-1@okhdfcbank` (scan the QR on the project website)
+यह प्रोजेक्ट सिर्फ़ तकनीकी उपकरण नहीं है।  
+यह **संपूर्ण जीवन समर्पण का प्रतीक** है — मानवता, प्रकृति और पृथ्वी संरक्षण के लिए।  
+हमारा उद्देश्य:
 
-Website (donation page): `https://<your-app>.koyeb.app` (will appear after deploy)
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Support Omniverse AI Scripts — Donate</title>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f6f8fa}
-    .card{background:white;padding:28px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.08);max-width:760px;width:100%}
-    h1{margin:0 0 8px;font-size:20px}
-    p{margin:6px 0 18px;color:#333}
-    .methods{display:flex;gap:16px;flex-wrap:wrap}
-    .method{flex:1;min-width:220px;padding:14px;border-radius:8px;border:1px solid #eee}
-    .btn{display:inline-block;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:600}
-    .paypal{background:#fff;padding:8px 12px;border-radius:8px;border:1px solid #d4d4d4}
-    .upi-qr{max-width:180px;display:block;margin-top:10px}
-    footer{margin-top:18px;color:#666;font-size:13px}
-    .note{background:#fff8e1;padding:8px;border-radius:8px;margin-top:10px}
-    code{background:#f5f5f5;padding:2px 6px;border-radius:4px}
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h1>Support this project — Help Saneha's education</h1>
-    <p>If this project helps you, a small donation will go a long way toward my daughter's education and living expenses. Thank you ❤️</p>
+- **मानवता और प्रकृति का संरक्षण**  
+- **सृजन और ज्ञान को साझा करना**  
+- **सच्चाई और निष्पक्ष समझ को प्रस्तुत करना**  
+- **मेरी बेटी, Saneha Saini के शिक्षा और जीवन समर्थन के लिए सहायता जुटाना**  
 
-    <div class="methods">
-      <div class="method">
-        <strong>PayPal</strong>
-        <p>Donate via PayPal link:</p>
-        <a class="btn paypal" href="https://paypal.me/yourid" target="_blank" rel="noopener">Donate with PayPal</a>
-        <p style="margin-top:8px;font-size:13px;color:#444">Or send to: <code>sainirampaul60@gmail.com</code></p>
-      </div>
+> This project represents a lifelong dedication to preserving humanity and nature, sharing creation and knowledge, and supporting my daughter’s education and livelihood.
 
-      <div class="method">
-        <strong>Google Pay / UPI</strong>
-        <p>Scan the QR or use the UPI ID in your UPI app to pay instantly.</p>
-        <p><strong>UPI ID:</strong> <code>sainirampaul90-1@okhdfcbank</code></p>
-        <img class="upi-qr" src="assets/upi-qr.webp" alt="UPI QR (scan to pay)" onerror="this.style.display='none'"/>
-        <p style="margin-top:8px;font-size:13px;color:#444">If QR doesn't display, use the UPI ID above in your UPI app.</p>
-      </div>
+---
 
-      <div class="method">
-        <strong>Other</strong>
-        <p>Contact: <code>sainirampaul60@gmail.com</code></p>
-      </div>
-    </div>
+## 🛠️ Technical Overview / तकनीकी सारांश
 
-    <div class="note">
-      <strong>Privacy:</strong> Donor details will not be shared publicly without consent.
-    </div>
+- Omniverse AI + EcoSim scripts  
+- Automated PDF generation for documentation  
+- GitHub Actions workflow for auto PR creation and deployment  
+- Dockerfile for easy deployment (Koyeb, local, or cloud)  
+- Organized folder structure:
+- - Safe personal fork — no upstream push
 
-    <footer>
-      <p>Thank you for supporting Saneha's future.</p>
-    </footer>
-  </div>
-</body>
-</html>
-pkg update -y
-pkg install git -y
-cd $HOME
-git clone https://github.com/rampaulsaini/omniverse--ai-scripts-.git
-cd omniverse--ai-scripts-
+---
 
-# Replace README
-cat > README.md <<'EOF'
-# omniverse--ai-scripts-
+## 💖 Support & Contribution / समर्थन और योगदान
 
-Personal fork for Omniverse AI + EcoSim scripts, automated PDF generation, and workflow testing. Fully safe, no upstream push.
+यदि यह प्रोजेक्ट आपको मदद करता है, तो आप छोटे या बड़े योगदान के माध्यम से मदद कर सकते हैं।  
+सभी सहायता मेरी बेटी की शिक्षा और जीवनव्यापन में उपयोग होगी।  
 
-## Donate / Support
-- PayPal: https://paypal.me/yourid
-- Google Pay / UPI: sainirampaul90-1@okhdfcbank
-EOF
+**PayPal:**  
+[sainirampaul60@gmail.com](mailto:sainirampaul60@gmail.com)  
 
-# Create web files
-mkdir -p web/assets
-cat > web/index.html <<'EOF'
-(paste the HTML from above)
-EOF
+**Google Pay / UPI:**  
+UPI ID: `sainirampaul90-1@okhdfcbank`  
+QR Code (scan to pay):  
+![UPI QR](web/assets/upi-qr.webp)  
 
-# If you have the QR file on phone, move it into repo at web/assets/upi-qr.webp,
-# or download it:
-curl -L -o web/assets/upi-qr.webp "https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp" || true
+**Other Contact / अन्य संपर्क:**  
+Email: `sainirampaul60@gmail.com`  
+GitHub Issues: [Open Issue](https://github.com/rampaulsaini/omniverse--ai-scripts-/issues/new)  
 
-# Dockerfile
-cat > Dockerfile <<'EOF'
-(paste Dockerfile from above)
-EOF
+**Privacy / गोपनीयता:**  
+Donor details will **not** be shared publicly without consent.
 
-git add README.md web/index.html web/assets/upi-qr.webp Dockerfile
-git commit -m "restore donation page, QR and Dockerfile"
-git push origin main
+---
+
+## 📌 How to Use / उपयोग कैसे करें
+
+1. Clone the repo:  
+ ```bash
+ git clone https://github.com/rampaulsaini/omniverse--ai-scripts-.git
+ cd omniverse--ai-scripts-
+
+---
+
+मैं चाहूँ तो इसके लिए **एक छोटा और आकर्षक GitHub front page screenshot preview style HTML + Markdown version** भी बना दूँ,  
+जिसमें आपका Banner image, vision, और donate buttons एकदम “live website feel” दे — ऐसा कि repo open करते ही visitor को पूरा impact मिले।  
+
+क्या मैं वो version भी बना दूँ?
