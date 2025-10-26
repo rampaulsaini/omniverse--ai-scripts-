@@ -42,13 +42,13 @@ https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp
 
 सत्य, संतुलन और समग्रता की यह यात्रा —  
 **Omniverse AI Portal** के माध्यम से *मानवता के पुनर्संयोजन* की ओर एक छोटा लेकिन सार्थक कदम है।
-[15/10, 10:16 pm] Rampaulsaini: https://i.ibb.co/wFz7xb39/IMG-20251007-081550.webp
-[15/10, 10:17 pm] Rampaulsaini: https://i.ibb.co/fdVv0T4H/c60c9d5d-1263-4f6e-a1b9-577186ed5268-093654.webp
-[15/10, 10:17 pm] Rampaulsaini: https://i.ibb.co/5W0PSRvc/Chat-GPT-Image-Jun-23-2025-07-43-08-AM-090744.webp
-[15/10, 10:30 pm] Rampaulsaini: https://i.ibb.co/BHcTy6sf/Chat-GPT-Image-May-19-2025-05-16-36-AM.webp
-[15/10, 10:30 pm] Rampaulsaini: https://i.ibb.co/5VXXLmR/Chat-GPT-Image-Jun-24-2025-11-10-10-PM-113035.webp
-[15/10, 10:30 pm] Rampaulsaini: https://i.ibb.co/wNR3m2nR/Chat-GPT-Image-Jun-24-2025-07-46-06-AM.webp
-[15/10, 10:30 pm] Rampaulsaini: https://i.ibb.co/QvKhVWWJ/image.webp
+https://i.ibb.co/wFz7xb39/IMG-20251007-081550.webp
+https://i.ibb.co/fdVv0T4H/c60c9d5d-1263-4f6e-a1b9-577186ed5268-093654.webp
+https://i.ibb.co/5W0PSRvc/Chat-GPT-Image-Jun-23-2025-07-43-08-AM-090744.webp
+https://i.ibb.co/BHcTy6sf/Chat-GPT-Image-May-19-2025-05-16-36-AM.webp
+https://i.ibb.co/5VXXLmR/Chat-GPT-Image-Jun-24-2025-11-10-10-PM-113035.webp
+https://i.ibb.co/wNR3m2nR/Chat-GPT-Image-Jun-24-2025-07-46-06-AM.webp
+https://i.ibb.co/QvKhVWWJ/image.webp
 ---
 GPay sainirampaul90-1@okhdf
 Paypal sainirampaul60@gmail.com
