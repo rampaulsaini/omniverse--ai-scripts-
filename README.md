@@ -47,5 +47,8 @@ https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp
 GPay sainirampaul90-1@okhdf
 Paypal sainirampaul60@gmail.com
 https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp
-
+https://chat.whatsapp.com/CxwzR0ufxdL4yAGCqifPRh?mode=wwt
+https://www.facebook.com/share/1Bc9qeE5uB/
+https://multicosmovision.blogspot.com/2025/09/2-e-h-e-c-e-e-1-d_11.html
+https://youtube.com/@rampaulsaini-yk4gn?si=Y1MhQB1Eg84ARD6I
 🕊️ *— Shirmani Rampaul Saini, Founder & Vision Architect (Omniverse AI)*  
