@@ -31,7 +31,7 @@
 ---
 
 ### 💫 Contribute / Support
-- **GPay:** `sainirampaul90-1@okhdfcbank`  
+- **GPay:** `sainirampaul90-1@okhdf
 - **PayPal:** [paypal.me/sainirampaul60](https://paypal.me/sainirampaul60)
 
 ---
@@ -44,7 +44,7 @@
 **Omniverse AI Portal** के माध्यम से *मानवता के पुनर्संयोजन* की ओर एक छोटा लेकिन सार्थक कदम है।
 
 ---
-GPay sainirampaul90-1@okhdf 
+GPay sainirampaul90-1@okhdf
 Paypal sainirampaul60@gmail.com
 https://i.ibb.co/QvVpFK6j/IMG-20251022-190835.webp
 
