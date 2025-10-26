@@ -44,5 +44,8 @@
 **Omniverse AI Portal** के माध्यम से *मानवता के पुनर्संयोजन* की ओर एक छोटा लेकिन सार्थक कदम है।
 
 ---
+GPay sainirampaul90-1@okhdf 
+Paypal sainirampaul60@gmail.com
+
 
 🕊️ *— Shirmani Rampaul Saini, Founder & Vision Architect (Omniverse AI)*  
